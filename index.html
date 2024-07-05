@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Event Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Event Management</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="index.html">Home</a></li>
+      <li><a href="create_event.html"> Create Event</a></li>
+<!--       <li><a href="#">Page 2</a></li>
+      <li><a href="#">Page 3</a></li> -->
+    </ul>
+  </div>
+</nav>
+  
+<div class="container">
+
+
+    <table id="table" class="table table-hover" align="center" border="1px">
+       
+      <!-- <thead> -->
+      <tr>
+        <th>Event Name</th>
+        <th>Organize name</th>
+        <th>Event Date</th>
+        <th>Cost</th>
+        <th>Location</th>
+        <th>Description</th>
+        <th>Action</th>
+      </tr>
+    <!-- </thead> -->
+    </table>
+</div>
+
+
+
+<script type="text/javascript">
+
+var table = document.getElementById('table');
+// data.forEach(function(object) {
+//   var tr = document.createElement('tr');
+//   tr.innerHTML = '<td>' + object.subject + '</td>' +
+//     '<td>' + object.codeNo + '</td>' +
+//     '<td>' + object.courseNo + '</td>' +
+//     '<td>' + object.instructor + '</td>';
+//   table.appendChild(tr);
+// });
+
+    
+    const apiUrl = 'http://localhost:8080/';
+
+  const requestOptions = {
+    method: 'GET',
+    // body: formData,
+
+    headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Origin': 'http://localhost:80',
+                'Content-Type': 'application/json',
+            }
+  };
+
+
+
+async function graphDrawFunction() {
+
+  
+            var request = async () => {
+                var response = await fetch(apiUrl+'events');
+                return response.json();
+            }
+            var data = await request();
+            let len = data.length;
+            for (let i=0;i<data.length;i++) {
+
+              if(len <=data.length){
+              data.forEach(function(object) {
+                len++;
+                var tr = document.createElement('tr');
+                tr.innerHTML = '<td>' + object.eventname + '</td>' +
+                  '<td>' + object.organizename + '</td>' +
+                  '<td>' + object.eventdate + '</td>' +
+                  '<td>' + object.cost + '</td>'+
+                  '<td>' + object.location + '</td>'+
+                  '<td>' + object.description + '</td>'+
+                  '<td>' + '<button onclick="acceptEvent('+ object.id+')"> Accept </button> | ' + 
+                  '<button onclick="deleteEvent('+ object.id+')"> Delete</button>' +
+                  '</td>';
+                table.appendChild(tr);
+              });
+              }
+               
+
+          }
+
+            // return "--";
+        };
+
+graphDrawFunction();
+
+function acceptEvent(eventid){
+
+
+const requestOptions = {
+    method: 'PUT',
+
+    headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Origin': 'http://localhost:80',
+                'Content-Type': 'application/json',
+            }
+  };
+
+
+
+              fetch(apiUrl+'isaccept/'+eventid+'/'+1, requestOptions)
+    .then(response => {
+      console.log(response);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.text();
+    })
+    .then(data => {
+      console.log(data+"data");
+    })
+    .catch(error => {
+      console.log(error+"error");
+      console.error('Error:', error);
+    });
+  
+
+}
+
+
+function deleteEvent(eventid){
+
+
+const requestOptions = {
+    method: 'DELETE',
+
+    headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Origin': 'http://localhost:80',
+                'Content-Type': 'application/json',
+            }
+  };
+
+
+
+  fetch(apiUrl+eventid, requestOptions)
+    .then(response => {
+      console.log(response);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.text();
+    })
+    .then(data => {
+      console.log(data+"data");
+      alert("successfully deleted");
+    })
+    .catch(error => {
+      console.log(error+"error");
+      console.error('Error:', error);
+    });
+  
+
+}
+
+  </script>
+</body>
+</html>
