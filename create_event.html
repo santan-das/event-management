@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Event Management</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Event Management</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="index.html">Home</a></li>
+      <li><a href="create_event.html"> Create Event</a></li>
+<!--       <li><a href="#">Page 2</a></li>
+      <li><a href="#">Page 3</a></li> -->
+    </ul>
+  </div>
+</nav>
+
+<div class="container">
+  <!-- <h2>Vertical (basic) form</h2> -->
+  <form id="contact-form">
+    <div class="form-group">
+      <label for="email">Event name:</label>
+      <input type="text" class="form-control" id="eventname" placeholder="Enter name" name="eventname">
+    </div>
+
+    <div class="form-group">
+      <label for="email">Organize name:</label>
+      <input type="text" class="form-control" id="organizename" placeholder="Enter name" name="organizename">
+    </div>
+
+    <div class="form-group">
+      <label for="email">Location name:</label>
+      <input type="text" class="form-control" id="location" placeholder="Enter name" name="location">
+    </div>
+
+    <div class="form-group">
+      <label for="email">Type name:</label>
+      <input type="text" class="form-control" id="typeofevent" placeholder="Enter name" name="typeofevent">
+    </div>
+
+    <div class="form-group">
+      <label for="email">Event date:</label>
+      <input type="text" class="form-control" id="eventdate" placeholder="Enter name" name="eventdate">
+    </div>
+
+    <div class="form-group">
+      <label for="email">Cost:</label>
+      <input type="text" class="form-control" id="cost" placeholder="Enter name" name="cost">
+    </div>
+
+    <div class="form-group">
+      <label for="pwd">Description:</label>
+      <input type="text" class="form-control" id="description" placeholder="Enter description" name="description">
+    </div>
+    <div class="checkbox">
+      <!-- <label><input type="checkbox" name="remember"> Remember me</label> -->
+    </div>
+    <button type="submit" class="btn btn-default">Submit</button>
+  </form>
+</div>
+
+
+<script type="text/javascript">
+    
+    const apiUrl = 'http://localhost:8080/';
+
+const contactForm = document.getElementById('contact-form');
+
+/*if(contactForm == 'contact-form') {
+  apiUrl = apiUrl + 'event';
+
+}*/
+const responseMessage = document.getElementById('response-message');
+
+contactForm.addEventListener('submit', function (event) {
+  event.preventDefault();
+  // console.log(contactForm.value);
+
+  let envUrl = apiUrl + 'event';
+
+  let formvalues = new FormData(contactForm);
+  // let name = formvalues.get('eventname');
+  // let department = formvalues.get('department');
+  const formData = JSON.stringify({
+    eventname: formvalues.get('eventname'),
+    organizename: formvalues.get('organizename'),
+    location: formvalues.get('location'),
+    typeofevent: formvalues.get('typeofevent'),
+    eventdate: formvalues.get('eventdate'),
+    cost: formvalues.get('cost'),
+    description: formvalues.get('description'),
+
+  });
+console.log(envUrl);
+  const requestOptions = {
+    method: 'POST',
+    body: formData,
+
+    headers: {
+                'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': 'http://localhost:80',
+                'Content-Type': 'application/json',
+            }
+  };
+
+  fetch(envUrl, requestOptions)
+    .then(response => {
+      console.log(response);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.text();
+    })
+    .then(data => {
+      console.log(data+"data");
+      responseMessage.textContent = data;
+    })
+    .catch(error => {
+      console.log(error+"error");
+      console.error('Error:', error);
+    });
+});
+  </script>
+</body>
+</html>
